@@ -17,6 +17,7 @@ There are some specific CMake flags may need:
  * `COVERAGE`: generate coverage report, OFF by default
  * `DEBUG_SUFFIX`: add debug suffix 'd' to the libraries, ON on Widows, OFF elsewhere
  * `LIBVLC_VERSION`: set VLC version you are compiling with to disable unsupported
+
  	features, should be defined as base 16 integer like `0x020200`, defaults to
  	latest stable VLC version
  * `STATIC`: build statically, OFF by default
@@ -74,6 +75,134 @@ $ cmake .. -GNinja -DCMAKE_BUILD_TYPE=Debug ^
 $ ninja
 $ ninja install
 ```
+
+#### Windows + QT + MINGW + VLC(3.0.16)
+
+##### Prepare
+- Install QT 15.5.2 [MinGW  Win32 & Win64] & Tools [MinGW  Win32 & Win64]
+- Download File: Tag:0.10.0 windows/mingw/poll.h
+- Download VLC 3.0.16 Win32 & Win64 
+
+
+QT_ROOT = F:/Qt_15.5.2
+VLC_ROOT = E:/bibi/vlc-qt/vlc/vlc-3.0.16/
+VLC_WIN32 = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32
+VLC_WIN64 = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64
+
+
+##### WIN32 
+
+- copy poll.h to E:\bibi\vlc-qt\vlc\vlc-3.0.16\vlc-3.0.16-win32\vlc-3.0.16\sdk\include\vlc\plugins
+- change E:\bibi\vlc-qt\vlc\vlc-3.0.16\vlc-3.0.16-win32\vlc-3.0.16\sdk\include\vlc\plugins\vlc_threads.h
+- add F:\Qt_15.5.2\Tools\mingw810_32\bin to PATH environment
+
+```
+#if defined (_WIN32)
+# include <poll.h>
+# include <process.h>
+# ifndef ETIMEDOUT
+#  define ETIMEDOUT 10060 /* This is the value in winsock.h. */
+# endif
+```
+
+```
+CMAKE_BINARY_DIR = E:/bibi/vlc-qt/vlc-qt/vlc-qt-build_32
+# VLCQT_VERSION = 1.2.0
+CMAKE_MAKE_PROGRAM = F:/Qt_15.5.2/Tools/mingw810_32/bin/mingw32-make.exe
+CMAKE_INSTALL_PREFIX = E:/bibi/vlc-qt/vlc-qt/vlc-qt-prefix_32
+CMAKE_BUILD_TYPE = RelWithDebInfo
+CMAKE_DEBUG_POSTFIX = d
+
+LIBVLC_VERSION =  0x030016
+VLC_PLUGIN_PATH = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32/plugins
+
+LIBVLC_LIBRARY = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32/vlc-3.0.16/sdk/lib/libvlc.lib
+LIBVLCCORE_LIBRARY = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32/vlc-3.0.16/sdk/lib/libvlccore.lib
+LIBVLC_INCLUDE_DIR = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32/vlc-3.0.16/sdk/include
+
+
+LINK_DIRECTORIES(
+	F:/Qt_15.5.2/Tools/mingw810_32/5.15.2/mingw81_32/bin
+	E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32/vlc-3.0.16/
+)
+```
+
+![](cmake-gui-mingw32-qt-vlc-win32.png)
+
+
+
+```
+cd E:/bibi/vlc-qt/vlc-qt/vlc-qt-build_32
+set PATH=F:/Qt_15.5.2/5.15.2/mingw81_32/bin;E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win32/vlc-3.0.16/;%PATH%
+F:/Qt_15.5.2/Tools/mingw810_32/bin/mingw32-make.exe
+```
+
+![](mingw32-qt-vlc-win32-build.png)
+
+
+
+```
+F:/Qt_15.5.2/Tools/mingw810_32/bin/mingw32-make.exe install
+```
+
+![](mingw32-qt-vlc-win32-release.png)
+
+
+
+##### WIN64 
+- copy poll.h to E:\bibi\vlc-qt\vlc\vlc-3.0.16\vlc-3.0.16-win64\vlc-3.0.16\sdk\include\vlc\plugins
+- change E:\bibi\vlc-qt\vlc\vlc-3.0.16\vlc-3.0.16-win64\vlc-3.0.16\sdk\include\vlc\plugins\vlc_threads.h
+- add F:\Qt_15.5.2\Tools\mingw810_64\bin to PATH environment
+
+```
+#if defined (_WIN32)
+# include <poll.h>
+# include <process.h>
+# ifndef ETIMEDOUT
+#  define ETIMEDOUT 10060 /* This is the value in winsock.h. */
+# endif
+```
+
+```
+CMAKE_BINARY_DIR = E:/bibi/vlc-qt/vlc-qt/vlc-qt-build_64
+# VLCQT_VERSION = 1.2.0
+CMAKE_MAKE_PROGRAM = F:/Qt_15.5.2/Tools/mingw810_64/bin/mingw32-make.exe
+CMAKE_INSTALL_PREFIX = E:/bibi/vlc-qt/vlc-qt/vlc-qt-prefix_64
+CMAKE_BUILD_TYPE = RelWithDebInfo
+CMAKE_DEBUG_POSTFIX = d
+
+LIBVLC_VERSION =  0x030016
+VLC_PLUGIN_PATH = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64/plugins
+
+LIBVLC_LIBRARY = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64/vlc-3.0.16/sdk/lib/libvlc.lib
+LIBVLCCORE_LIBRARY = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64/vlc-3.0.16/sdk/lib/libvlccore.lib
+LIBVLC_INCLUDE_DIR = E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64/vlc-3.0.16/sdk/include
+
+
+LINK_DIRECTORIES(
+	F:/Qt_15.5.2/Tools/mingw810_32/5.15.2/mingw81_64/bin
+	E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64/vlc-3.0.16/
+)
+```
+![](cmake-gui-mingw64-qt-vlc-win64.png)
+
+
+```
+cd E:/bibi/vlc-qt/vlc-qt/vlc-qt-build_64
+set PATH=F:/Qt_15.5.2/5.15.2/mingw81_64/bin;E:/bibi/vlc-qt/vlc/vlc-3.0.16/vlc-3.0.16-win64/vlc-3.0.16/;%PATH%
+F:/Qt_15.5.2/Tools/mingw810_64/bin/mingw32-make.exe
+```
+![](mingw64-qt-vlc-win64-build.png)
+
+
+
+```
+F:/Qt_15.5.2/Tools/mingw810_64/bin/mingw32-make.exe install
+```
+
+![](mingw64-qt-vlc-win64-release.png)
+
+
 
 ### Linux
 Install requirements from your distribution's repository.
