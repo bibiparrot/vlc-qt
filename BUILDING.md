@@ -76,7 +76,16 @@ $ ninja
 $ ninja install
 ```
 
-#### Windows + QT + MINGW + VLC(3.0.16)
+#### Windows + QT(15.5.2) + MINGW(8.10) + VLC(3.0.16)
+
+We released binary version: qt-vlc-1.2.0-mingw(qt15.5.2_vlc3.0.16)
+
+- Windows Build & Release with MinGW
+- MinGW Win32/64 RelWithDebInfo Version 
+- VLC-Qt version: "1.2.0-9b2f561" 
+- libvlc version: "3.0.16 Vetinari"
+- QT version: "15.5.2"
+
 
 ##### Prepare
 - Install QT 15.5.2 [MinGW  Win32 & Win64] & Tools [MinGW  Win32 & Win64]
@@ -201,6 +210,8 @@ F:/Qt_15.5.2/Tools/mingw810_64/bin/mingw32-make.exe install
 ```
 
 ![](mingw64-qt-vlc-win64-release.png)
+
+
 
 
 
